@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+
+@layer components {
+  .input-stock {
+    @apply w-full h-12 rounded-xl border border-slate-300 px-3;
+  }
+
+  .label-stock {
+    @apply flex flex-col gap-1 font-medium text-slate-700;
+  }
+
+  .btn-stock {
+    @apply w-full h-12 rounded-xl bg-blue-600 text-white font-semibold;
+  }
+
+  .card-stock {
+    @apply bg-white rounded-3xl shadow-lg p-5;
+  }
+}

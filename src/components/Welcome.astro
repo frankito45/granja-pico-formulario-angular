@@ -1,0 +1,383 @@
+---
+
+
+export  const prerender = false
+
+
+
+---
+<div class="min-h-screen bg-slate-100 p-4">
+	<div class="bg-white rounded-3xl shadow-lg p-5">
+
+		
+		<h1 class="text-3xl font-bold text-center mb-6 text-slate-800">Granja Pico</h1>
+		
+		<select name="" id="local">
+			<option value="2">Granja</option>
+			<option value="1">Avicola</option>
+		</select>
+		
+		<select name="categoria" id="categoria">
+			<option value="pollo">Pollo</option>
+			<option value="cerdo">Cerdo</option>
+			<option value="achura">Achura</option>
+			<option value="limpieza">limpieza</option>
+		</select>
+
+		<select name="estado" id="estado">
+			<option value="1">Inicio</option>
+			<option value="2">Final</option>
+			<option value="3">Ingreso</option>
+			<option value="4">Envio</option>
+			<option value="5">devolucion</option>
+			<option value="6">Produccion</option>
+		</select>
+		
+		
+		<!-- formulario Pollo -->
+		<form method="POST" id="pollo">
+			<label class="label-stock">
+				Pollo Cajon:
+				<input type="number" step="0.001" class="input-stock" name="30" />
+			</label>
+			<label class="label-stock">
+				Pollo:
+				<input type="number" step="0.001" class="input-stock" name="1" />
+			</label>
+			<label class="label-stock">
+				pata y muslo:
+				<input type="number" step="0.001" class="input-stock" name="2" />
+			</label>
+			<label class="label-stock">
+				Suprema:
+				<input type="number" step="0.001" class="input-stock" name="3" />
+			</label>
+			<label class="label-stock">
+				Alita:
+				<input type="number" step="0.001" class="input-stock" name="4"/>
+			</label>
+			<label class="label-stock">
+				Milanesa:
+				<input type="number" step="0.001" class="input-stock" name="5"/>
+			</label>
+			<label class="label-stock">
+				menudo:
+				<input type="number" step="0.001" class="input-stock" name="6" />
+			</label>
+			
+			<label class="label-stock">
+				Huevo:
+				<input type="number" step="0.001" class="input-stock" name="7" />
+			</label>
+			
+			<button class="btn-stock">Submit</button>
+		</form>
+		
+		<!-- formulario Cerdo -->
+		<form method="POST" id="cerdo" style="display: none;" >
+			<label class="label-stock">
+				Bondiola:
+				<input type="number" step="0.001" class="input-stock" name="16"/>
+			</label>
+			<label class="label-stock">
+				Pechito:
+				<input type="number" step="0.001" class="input-stock" name="15" />
+			</label>
+			<label class="label-stock">
+				Matambre:
+				<input type="number" step="0.001" class="input-stock" name="18" />
+			</label>
+			<label class="label-stock">
+			Carre:
+			<input type="number" step="0.001" class="input-stock" name="14" />
+		</label>
+		<label class="label-stock">
+			Lomo:
+			<input type="number" step="0.001" class="input-stock" name="17" />
+		</label>
+		<label class="label-stock">
+			Cabeza:
+			<input type="number" step="0.001" class="input-stock" name="19" />
+		</label>
+		<button class="btn-stock">Submit</button>
+		</form>
+	
+	
+		<!-- formulario Achura -->
+		<form method="POST" id="achura" style="display: none;" >
+			<label class="label-stock">
+				riñon:
+				<input type="number" step="0.001" class="input-stock" name="13"/>
+			</label>
+			<label class="label-stock">
+				Higado:
+				<input type="number" step="0.001" class="input-stock" name="8"/>
+			</label>
+			<label class="label-stock">
+				Corazon:
+				<input type="number" step="0.001" class="input-stock" name="9"/>
+			</label>
+			<label class="label-stock">
+				Chinchulin:
+				<input type="number" step="0.001" class="input-stock" name="10"/>
+			</label>
+			<label class="label-stock">
+				Mondongo:
+				<input type="number" step="0.001" class="input-stock" name="12"/>
+			</label>
+			<!-- {errors.username && <p>{errors.username}</p>} -->
+			
+			<button class="btn-stock">Submit</button>
+		</form>
+		<form method="POST" id="limpieza" style="display: none;" >
+			<label class="label-stock">
+				Bolsa basura:
+				<input type="number" step="0.001" class="input-stock" name="20" />
+			</label>
+			<label class="label-stock">
+				Bolsa Camiseta Chicas:
+				<input type="number" step="0.001" class="input-stock" name="21"/>
+			</label>
+			<label class="label-stock">
+				Bolsa Caminseta Grande:
+				<input type="number" step="0.001" class="input-stock" name="22"/>
+			</label>
+			<label class="label-stock">
+				Arranque 1Kg:
+				<input type="number" step="0.001" class="input-stock" name="23"/>
+			</label>
+			<label class="label-stock">
+				Arranque 3Kg:
+				<input type="number" step="0.001" class="input-stock" name="24"/>
+			</label>
+			<label class="label-stock">
+				Arranque Milansa:
+				<input type="number" step="0.001" class="input-stock" name="25"/>
+			</label>
+			<label class="label-stock">
+				Arranque 10Kg:
+				<input type="number" step="0.001" class="input-stock" name="29"/>
+			</label>
+			<label class="label-stock">
+				Cloro:
+				<input type="number" step="0.001" class="input-stock" name="26"/>
+			</label>
+			<label class="label-stock">
+				Detergente:
+				<input type="number" step="0.001" class="input-stock" name="27"/>
+			</label>
+			<label class="label-stock">
+				Sitronela:
+				<input type="number" step="0.001" class="input-stock" name="28"/>
+			</label>
+			<button class="btn-stock">Submit</button>
+		</form>
+	
+	</div>
+</div>
+
+
+<div
+  id="loading"
+  class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50"
+>
+  <div class="bg-white p-6 rounded-xl shadow-lg">
+    <p class="text-lg font-bold">Guardando datos...</p>
+  </div>
+</div>
+
+<script>
+	const loading = document.getElementById('loading') as HTMLSelectElement ;
+	const local = document.getElementById('local') as HTMLSelectElement
+	const categoria = document.getElementById('categoria') as HTMLSelectElement
+	const formPollo = document.getElementById('pollo') as HTMLFormElement
+	const formCerdo = document.getElementById('cerdo') as HTMLFormElement
+	const formLimpieza = document.getElementById('limpieza') as HTMLFormElement
+	const formAchura = document.getElementById('achura') as HTMLFormElement
+	const estado = document.getElementById('estado') as HTMLSelectElement
+
+	categoria?.addEventListener('change',()=>{
+		if (categoria.value === 'pollo') {
+			formPollo.style.display = 'block'
+			formCerdo.style.display = 'none'
+			formAchura.style.display = 'none';
+			formLimpieza.style.display = 'none';
+		
+		}
+		
+		else if(categoria.value === 'cerdo'){
+			formPollo.style.display = 'none';
+			formCerdo.style.display = 'block';
+			formAchura.style.display = 'none';
+			formLimpieza.style.display = 'none';
+		
+		}
+		
+		else if(categoria.value === 'achura'){
+			formPollo.style.display = 'none';
+			formCerdo.style.display = 'none';
+			formAchura.style.display = 'block';
+			formLimpieza.style.display = 'none';
+		}
+		else{
+			formPollo.style.display = 'none';
+			formCerdo.style.display = 'none';
+			formAchura.style.display = 'none';
+			formLimpieza.style.display = 'block';
+		}
+	})
+
+
+formPollo.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  loading.classList.remove('hidden');
+
+  try {
+
+    const formData = new FormData(formPollo);
+
+    for (const [producto_id, cantidad] of formData.entries()) {
+
+      if (!cantidad) continue;
+
+      await fetch('/api/stock', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          local_id: Number(local.value),
+          estado_id: Number(estado.value),
+          producto_id: Number(producto_id),
+          cantidad: Number(cantidad)
+        })
+      });
+    }
+
+    formPollo.reset();
+
+    alert('Stock guardado correctamente');
+
+  } finally {
+
+    loading.classList.add('hidden');
+
+  }
+});
+
+formCerdo.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  loading.classList.remove('hidden');
+
+  try {
+
+    const formData = new FormData(formCerdo);
+
+    for (const [producto_id, cantidad] of formData.entries()) {
+
+      if (!cantidad) continue;
+
+      await fetch('/api/stock', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          local_id: Number(local.value),
+          estado_id: Number(estado.value),
+          producto_id: Number(producto_id),
+          cantidad: Number(cantidad)
+        })
+      });
+    }
+
+    formCerdo.reset();
+
+    alert('Stock guardado correctamente');
+
+  } finally {
+
+    loading.classList.add('hidden');
+
+  }
+});
+
+formAchura.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  loading.classList.remove('hidden');
+
+  try {
+
+    const formData = new FormData(formAchura);
+
+    for (const [producto_id, cantidad] of formData.entries()) {
+
+      if (!cantidad) continue;
+
+      await fetch('/api/stock', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          local_id: Number(local.value),
+          estado_id: Number(estado.value),
+          producto_id: Number(producto_id),
+          cantidad: Number(cantidad)
+        })
+      });
+    }
+
+    formAchura.reset();
+
+    alert('Stock guardado correctamente');
+
+  } finally {
+
+    loading.classList.add('hidden');
+
+  }
+});
+
+formLimpieza.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  loading.classList.remove('hidden');
+
+  try {
+
+    const formData = new FormData(formLimpieza);
+
+    for (const [producto_id, cantidad] of formData.entries()) {
+
+      if (!cantidad) continue;
+
+      await fetch('/api/stock', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          local_id: Number(local.value),
+          estado_id: Number(estado.value),
+          producto_id: Number(producto_id),
+          cantidad: Number(cantidad)
+        })
+      });
+    }
+
+    formLimpieza.reset();
+
+    alert('Stock guardado correctamente');
+
+  } finally {
+
+    loading.classList.add('hidden');
+
+  }
+});
+
+</script>

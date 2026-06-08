@@ -1,0 +1,191 @@
+---
+
+---
+
+<div class="max-w-md mx-auto p-4">
+  
+  <input
+  type="date"
+    id="fecha"
+    class="w-full border rounded-lg p-3 mb-3"
+    />
+    
+    <select
+    id="local"
+    class="w-full border rounded-lg p-3 mb-3"
+    >
+    <option value="2">Granja</option>
+    <option value="1">Avicola</option>
+  </select>
+  
+  <select
+  id="categoria"
+  class="w-full border rounded-lg p-3 mb-4"
+  >
+  <option value="pollo">Pollo</option>
+  <option value="cerdo">Cerdo</option>
+  <option value="achura">Achura</option>
+  <option value="limpieza">Limpieza</option>
+</select>
+
+
+
+<button
+id="buscar"
+class="w-full bg-blue-600 text-white rounded-lg p-3 cursor-pointer"
+>
+Buscar
+</button>
+
+<div id="resultado" class="mt-4 space-y-3"></div>
+
+</div>
+
+<script>
+
+const fecha = document.getElementById('fecha') as HTMLInputElement;
+const local = document.getElementById('local') as HTMLSelectElement;
+const categoria = document.getElementById('categoria') as  HTMLSelectElement;
+const buscar = document.getElementById('buscar') as HTMLButtonElement;
+const resultado = document.getElementById('resultado') as HTMLAnchorElement;
+
+buscar.addEventListener('click', async () => {
+
+  resultado.innerHTML = '<p>Cargando...</p>';
+
+  const response = await fetch(
+    `/api/stock?fecha=${fecha.value}&local=${local.value}&categoria=${categoria.value}`
+  );
+
+  const data = await response.json();
+
+  console.log(data);
+
+  resultado.innerHTML = '';
+
+  if (!data.length) {
+    resultado.innerHTML = `
+      <div class="bg-white rounded-xl shadow p-4">
+        Sin movimientos
+      </div>
+    `;
+    return;
+  }
+
+  
+
+  data.forEach(item => {
+    if(item.categoria === 'limpieza'){
+        resultado.innerHTML += `
+                
+ <div class="bg-white rounded-xl shadow p-4">
+            
+            <h2 class="text-xl font-bold mb-3">
+                ${item.producto}
+                </h2>
+                
+        <div class="grid grid-cols-2 gap-2 text-sm">
+            
+            <div>Inicio:</div>
+            <div>${item.inicio}</div>
+            
+            <div>Ingresos:</div>
+            <div>${item.ingreso}</div>
+            
+            <div>Envíos:</div>
+            <div>${item.envio}</div>
+            
+            <div>Devoluciones:</div>
+            <div>${item.devolucion}</div>
+            
+
+            
+            <div class="font-bold text-green-600">
+                Total
+                </div>
+                
+                <div class="font-bold text-green-600">
+                    ${item.ventas}
+                    </div>
+
+                    </div>
+                    
+            </div>
+
+            
+        
+        `
+    }else{
+
+resultado.innerHTML += `
+<div class="bg-white rounded-xl shadow p-4">
+
+  <h2 class="text-xl font-bold mb-3">
+    ${item.producto}
+  </h2>
+
+  <div class="grid grid-cols-2 gap-2 text-sm">
+
+    <div>Inicio:</div>
+    <div>${item.inicio}</div>
+
+    <div>Ingresos:</div>
+    <div>
+      ${item.ingreso_mostrado}
+      ${item.merma > 0
+        ? `<span class="text-xs text-gray-500">(${item.ingreso})</span>`
+        : ''
+      }
+    </div>
+
+    <div>Producción:</div>
+    <div>
+      ${item.produccion_mostrada}
+      ${item.merma > 0
+        ? `<span class="text-xs text-gray-500">(${item.produccion})</span>`
+        : ''
+      }
+    </div>
+
+    <div>Envíos:</div>
+    <div>${item.envio}</div>
+
+    <div>Devoluciones:</div>
+    <div>${item.devolucion}</div>
+
+    <div class="font-bold">Final:</div>
+    <div class="font-bold">${item.final}</div>
+
+    ${
+      item.merma > 0
+      ? `
+        <div class="font-bold text-orange-600">
+          Merma:
+        </div>
+
+        <div class="font-bold text-orange-600">
+          ${item.merma}%
+        </div>
+      `
+      : ''
+    }
+
+    <div class="font-bold text-green-600">
+      Ventas
+    </div>
+
+    <div class="font-bold text-green-600">
+      ${item.ventas}
+    </div>
+
+  </div>
+
+</div>
+`;
+        }
+    });
+    
+});
+
+ 
+</script>
