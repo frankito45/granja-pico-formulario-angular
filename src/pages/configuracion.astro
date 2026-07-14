@@ -1,0 +1,92 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+
+    
+    <div class="min-h-screen bg-gray-100 p-4">
+      <a
+     href="/registros"
+     class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-white shadow active:scale-95"
+   >
+     ← Inicio
+   </a>
+    <h1 class="mb-4 text-2xl font-bold text-gray-800">
+      Mermas
+    </h1>
+
+    <div id="listaMermas" class="space-y-3"></div>
+  </div>
+</Layout>
+
+<script>
+  async function cargarMermas() {
+    const response = await fetch("/api/mermas");
+    const mermas = await response.json();
+
+    const lista = document.getElementById("listaMermas");
+    lista.innerHTML = "";
+
+    mermas.forEach((item) => {
+      const card = document.createElement("div");
+
+      card.className =
+        "rounded-xl bg-white p-4 shadow border border-gray-200";
+
+      card.innerHTML = `
+        <div class="mb-3">
+          <h2 class="text-lg font-semibold text-gray-800">
+            ${item.productos.nombre}
+          </h2>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <input
+            id="merma-${item.id}"
+            type="number"
+            value="${item.merma}"
+            class="flex-1 rounded-lg border border-gray-300 p-2 text-center text-lg"
+          />
+
+          <button
+            class="rounded-lg bg-green-600 px-4 py-2 font-medium text-white active:scale-95"
+            data-id="${item.id}"
+          >
+            Guardar
+          </button>
+      `;
+
+      const boton = card.querySelector("button");
+
+      boton.addEventListener("click", async () => {
+        const nuevaMerma = Number(
+          document.getElementById(`merma-${item.id}`).value
+        );
+
+        await actualizarMerma(item.id, nuevaMerma);
+      });
+
+      lista.appendChild(card);
+    });
+  }
+
+  async function actualizarMerma(id, nuevaMerma) {
+    const response = await fetch("/api/mermas", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id,
+        merma: nuevaMerma,
+      }),
+    });
+
+    if (response.ok) {
+      alert("Merma actualizada");
+    }
+  }
+
+  cargarMermas();
+</script>
