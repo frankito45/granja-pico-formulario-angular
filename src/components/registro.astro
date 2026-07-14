@@ -1,59 +1,56 @@
 ---
-
 ---
-    <div class="min-h-screen bg-gray-100 p-4">
-      <div class="max-w-md mx-auto p-4">
-  <a
- href="/configuracion"
- class="flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-white shadow active:scale-95 mb-3"
->
- Configuraciones
-</a>
-  
-  <input
-  type="date"
-    id="fecha"
-    class="w-full border rounded-lg p-3 mb-3"
-    />
-    
-    <select
-    id="local"
-    class="w-full border rounded-lg p-3 mb-3"
+
+<div class="min-h-screen bg-gray-100 p-4">
+  <div class="max-w-md mx-auto p-4">
+    <a
+      href="/configuracion"
+      class="flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-white shadow active:scale-95 mb-3"
     >
-    <option value="2">Granja</option>
-    <option value="1">Avicola</option>
-  </select>
-  
-  <select
-  id="categoria"
-  class="w-full border rounded-lg p-3 mb-4"
-  >
-  <option value="pollo">Pollo</option>
-  <option value="cerdo">Cerdo</option>
-  <option value="achura">Achura</option>
-  <option value="limpieza">Limpieza</option>
-</select>
+      Configuraciones
+    </a>
 
+    <input
+      type="date"
+      id="fecha"
+      class="w-full border rounded-lg p-3 mb-3"
+    />
 
+    <select
+      id="local"
+      class="w-full border rounded-lg p-3 mb-3"
+    >
+      <option value="2">Granja</option>
+      <option value="1">Avícola</option>
+    </select>
 
-<button
-id="buscar"
-class="w-full bg-blue-600 text-white rounded-lg p-3 cursor-pointer"
->
-Buscar
-</button>
+    <select
+      id="categoria"
+      class="w-full border rounded-lg p-3 mb-4"
+    >
+      <option value="pollo">Pollo</option>
+      <option value="cerdo">Cerdo</option>
+      <option value="achura">Achura</option>
+      <option value="limpieza">Limpieza</option>
+    </select>
 
-<div id="resultado" class="mt-4 space-y-3"></div>
+    <button
+      id="buscar"
+      class="w-full bg-blue-600 text-white rounded-lg p-3 cursor-pointer"
+    >
+      Buscar
+    </button>
 
+    <div id="resultado" class="mt-4 space-y-3"></div>
+  </div>
 </div>
 
-<script>
-
+<script >
 const fecha = document.getElementById('fecha') as HTMLInputElement;
 const local = document.getElementById('local') as HTMLSelectElement;
-const categoria = document.getElementById('categoria') as  HTMLSelectElement;
+const categoria = document.getElementById('categoria') as HTMLSelectElement;
 const buscar = document.getElementById('buscar') as HTMLButtonElement;
-const resultado = document.getElementById('resultado') as HTMLAnchorElement;
+const resultado = document.getElementById('resultado') as HTMLDivElement;
 
 buscar.addEventListener('click', async () => {
 
@@ -64,8 +61,6 @@ buscar.addEventListener('click', async () => {
   );
 
   const data = await response.json();
-
-  console.log(data);
 
   resultado.innerHTML = '';
 
@@ -78,120 +73,173 @@ buscar.addEventListener('click', async () => {
     return;
   }
 
-  
-
   data.forEach(item => {
-    if(item.categoria === 'limpieza'){
-        resultado.innerHTML += `
-                
- <div class="bg-white rounded-xl shadow p-4">
-            
-            <h2 class="text-xl font-bold mb-3">
-                ${item.producto}
-                </h2>
-                
-        <div class="grid grid-cols-2 gap-2 text-sm">
-            
+
+    if (item.categoria === 'limpieza') {
+
+      resultado.innerHTML += `
+        <div class="bg-white rounded-xl shadow p-4">
+
+          <h2 class="text-xl font-bold mb-3">
+            ${item.producto}
+          </h2>
+
+          <div class="grid grid-cols-2 gap-2 text-sm">
+
             <div>Inicio:</div>
             <div>${item.inicio}</div>
-            
+
             <div>Ingresos:</div>
             <div>${item.ingreso}</div>
-            
+
             <div>Envíos:</div>
             <div>${item.envio}</div>
-            
+
             <div>Devoluciones:</div>
             <div>${item.devolucion}</div>
-            
 
-            
             <div class="font-bold text-green-600">
-                Total
-                </div>
-                
-                <div class="font-bold text-green-600">
-                    ${item.ventas}
-                    </div>
-
-                    </div>
-                    
+              Total
             </div>
 
-            
-        
-        `
-    }else{
+            <div class="font-bold text-green-600">
+              ${item.ventas}
+            </div>
 
-resultado.innerHTML += `
-<div class="bg-white rounded-xl shadow p-4">
+          </div>
 
-  <h2 class="text-xl font-bold mb-3">
-    ${item.producto}
-  </h2>
+        </div>
+      `;
 
-  <div class="grid grid-cols-2 gap-2 text-sm">
+    } else {
 
-    <div>Inicio:</div>
-    <div>${item.inicio}</div>
+      resultado.innerHTML += `
+      <div class="bg-white rounded-xl shadow p-4">
 
-    <div>Ingresos:</div>
-    <div>
-      ${item.ingreso_mostrado}
-      ${item.merma > 0
-        ? `<span class="text-xs text-gray-500">(${item.ingreso})</span>`
-        : ''
-      }
-    </div>
+        <h2 class="text-xl font-bold mb-3">
+          ${item.producto}
+        </h2>
 
-    <div>Producción:</div>
-    <div>
-      ${item.produccion_mostrada}
-      ${item.merma > 0
-        ? `<span class="text-xs text-gray-500">(${item.produccion})</span>`
-        : ''
-      }
-    </div>
+        <div class="grid grid-cols-2 gap-2 text-sm">
 
-    <div>Envíos:</div>
-    <div>${item.envio}</div>
+          <div>Inicio:</div>
+          <div>${item.inicio}</div>
 
-    <div>Devoluciones:</div>
-    <div>${item.devolucion}</div>
+          <div>Ingresos:</div>
+          <div>
+            ${item.ingreso_mostrado}
+            ${item.merma > 0
+              ? `<span class="text-xs text-gray-500">(${item.ingreso})</span>`
+              : ''}
+          </div>
 
-    <div class="font-bold">Final:</div>
-    <div class="font-bold">${item.final}</div>
+          <div>Producción:</div>
+          <div>
+            ${item.produccion_mostrada}
+            ${item.merma > 0
+              ? `<span class="text-xs text-gray-500">(${item.produccion})</span>`
+              : ''}
+          </div>
 
-    ${
-      item.merma > 0
-      ? `
-        <div class="font-bold text-orange-600">
-          Merma:
+          <div>Envíos:</div>
+          <div>${item.envio}</div>
+
+          <div>Devoluciones:</div>
+          <div>${item.devolucion}</div>
+
+          <div class="font-bold">
+            Final
+          </div>
+
+          <div class="font-bold">
+            ${item.final}
+          </div>
+
+          ${
+            item.merma > 0
+              ? `
+                <div class="font-bold text-orange-600">
+                  Merma
+                </div>
+
+                <div class="font-bold text-orange-600">
+                  ${item.merma}%
+                </div>
+              `
+              : ''
+          }
+
+          <div class="font-bold text-green-600">
+            Consumido
+          </div>
+
+          <div class="font-bold text-green-600">
+            ${item.ventas.toFixed(2)}
+          </div>
+
+          <div class="font-bold">
+            Fudo
+          </div>
+
+          <div>
+            <input
+              type="number"
+              value="0"
+              data-consumido="${item.ventas}"
+              class="fudo w-full rounded-lg border border-gray-300 p-2"
+            />
+          </div>
+
+          <div class="font-bold">
+            Diferencia
+          </div>
+
+          <div class="font-bold diferencia text-red-600">
+            ${item.ventas.toFixed(2)}
+          </div>
+
         </div>
 
-        <div class="font-bold text-orange-600">
-          ${item.merma}%
-        </div>
-      `
-      : ''
+      </div>
+      `;
     }
 
-    <div class="font-bold text-green-600">
-      Consumido
-    </div>
+  });
 
-    <div class="font-bold text-green-600">
-      ${item.ventas}
-    </div>
+  document.querySelectorAll(".fudo").forEach((input) => {
 
-  </div>
+    input.addEventListener("input", (e) => {
 
-</div>
-`;
-        }
+      const target = e.target as HTMLInputElement;
+
+      const consumido = Number(target.dataset.consumido);
+      const fudo = Number(target.value);
+
+      const diferencia = fudo - consumido;
+
+      const card = target.closest(".bg-white") as HTMLDivElement;
+
+      const diferenciaEl = card.querySelector(".diferencia") as HTMLDivElement;
+
+      diferenciaEl.textContent = diferencia.toFixed(2).toString();
+
+      diferenciaEl.classList.remove(
+        "text-green-600",
+        "text-red-600",
+        "text-orange-600"
+      );
+
+      if (diferencia === 0) {
+        diferenciaEl.classList.add("text-green-600");
+      } else if (diferencia > 0) {
+        diferenciaEl.classList.add("text-orange-600");
+      } else {
+        diferenciaEl.classList.add("text-red-600");
+      }
+
     });
-    
-});
 
- 
+  });
+
+});
 </script>
