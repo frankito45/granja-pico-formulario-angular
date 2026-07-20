@@ -9,6 +9,12 @@
     >
       Configuraciones
     </a>
+    <a
+      href="/historial"
+      class="flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-white shadow active:scale-95 mb-3"
+    >
+      Historial
+    </a>
 
     <input
       type="date"
@@ -74,6 +80,7 @@ buscar.addEventListener('click', async () => {
   }
 
   data.forEach(item => {
+    
 
     if (item.categoria === 'limpieza') {
 
@@ -196,7 +203,9 @@ buscar.addEventListener('click', async () => {
 
           <div class="font-bold diferencia text-red-600">
             ${item.ventas.toFixed(2)}
-          </div>
+          </div> 
+
+
 
         </div>
 
@@ -229,10 +238,8 @@ buscar.addEventListener('click', async () => {
         "text-orange-600"
       );
 
-      if (diferencia === 0) {
+      if (diferencia >= 0) {
         diferenciaEl.classList.add("text-green-600");
-      } else if (diferencia > 0) {
-        diferenciaEl.classList.add("text-orange-600");
       } else {
         diferenciaEl.classList.add("text-red-600");
       }
