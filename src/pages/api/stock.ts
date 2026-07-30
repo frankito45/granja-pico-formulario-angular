@@ -147,5 +147,41 @@ Object.values(resumen).forEach((item: any) => {
 
 });
 
+
+const productosIds = Object.values(resumen).map(
+  (item:any) => item.producto_id
+);
+
+
+const { data: fudos, error: errorFudo } = await supabase
+  .from("fudo")
+  .select("producto, valor") 
+  .eq("fecha", fecha)
+  .eq("local", Number(local))
+  .in("producto", productosIds);
+
+
+
+const mapaFudo = new Map<number, number>();
+
+
+fudos?.forEach((f) => {
+
+  mapaFudo.set(
+    Number(f.producto),
+    Number(f.valor)
+  );
+
+});
+
+
+
+Object.values(resumen).forEach((item:any)=>{
+
+  item.fudo =
+    mapaFudo.get(item.producto_id) ?? 0;
+
+});
+
   return Response.json(Object.values(resumen));
 };
