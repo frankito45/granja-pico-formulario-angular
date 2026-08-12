@@ -11,8 +11,10 @@ export async function getDataDay(
   if (!response.ok) {
     throw new Error("Error al obtener los datos");
   }
+  
+  const result = await response.json();
 
-  return response.json();
+  return result;
 }
 
 

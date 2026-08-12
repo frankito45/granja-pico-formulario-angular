@@ -2,25 +2,77 @@ import type { APIRoute } from "astro";
 import { supabase } from "../../lib/supabase";
 
 export const prerender = false;
+type ProductoMovimiento = {
+  id: number;
+  cantidad: number;
+};
+
+type MovimientoRequest = {
+  fecha: string;
+  local_id: number;
+  estado_id: number;
+  productos: ProductoMovimiento[];
+};
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const data = await request.json()
+    const data = await request.json() as MovimientoRequest
+    console.log('datos0',data)
 
-    const { error } = await supabase.from('movimientos_stock')
-    .insert({
-      local_id: data.local_id,
-      estado_id: data.estado_id,
-      producto_id: data.producto_id,
-      cantidad: data.cantidad
-    })
+    const {fecha,local_id,estado_id,productos} = data
+   
 
-     if (error) {
+    if (!local_id || !estado_id ||!Array.isArray(productos) || !fecha  ) {
+       return Response.json(
+        {
+          success: false,
+          error: "Faltan datos obligatorios"
+        },
+        {
+          status: 400
+        }
+      );
+
+    }
+
+     const fechaMovimiento = `${fecha}T00:00:00-03:00`;
+
+    const movimientos  = productos.map((item) => ({
+      fecha: fechaMovimiento,
+      local_id: local_id,
+      estado_id: estado_id,
+      producto_id: item.id,
+      cantidad: item.cantidad
+      
+    }))
+
+    if(!movimientos.length){
+      return Response.json({
+        success: false,
+        error: "No hay productos con cantidad"
+      },{
+        status:400
+      })
+    }
+
+    const {error} = await supabase
+    .from('movimientos_stock')
+    .insert(movimientos)
+
+  if (error) {
+    console.error(error);
+
     return Response.json(
-      { success: false, error: error.message },
-      { status: 500 }
+      {
+        success: false,
+        error: error.message
+      },
+      {
+        status: 500
+      }
     );
   }
+
 
   return Response.json({
     success: true
@@ -141,6 +193,7 @@ Object.values(resumen).forEach((item: any) => {
     item.inicio +
     item.ingreso_mostrado +
     item.produccion_mostrada -
+    item.consumo -
     item.envio -
     item.devolucion -
     item.final;

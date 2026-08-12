@@ -1,5 +1,7 @@
 ---
 import Layaout from "../layouts/Layout.astro";
+
+
 ---
 <Layaout>
     
@@ -61,13 +63,12 @@ import Layaout from "../layouts/Layout.astro";
           Categoría
         </label>
 
-        <input
-          type="text"
-          id="categoria"
-          value="pollo"
-          placeholder="Ej: pollo"
-          class="w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <select name="categoria" id="categoria">
+          <option value="pollo">pollo</option>
+          <option value="cerdo">cerdo</option>
+          <option value="limpieza">limpieza</option>
+          <option value="achura">achura</option>
+        </select>
       </div>
 
       <button

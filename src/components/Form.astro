@@ -1,0 +1,247 @@
+---
+const { categorias, locales, estados } = Astro.props;
+
+const nombresCategorias = Object.keys(categorias);
+---
+
+<div class="mx-auto max-w-md rounded-2xl bg-white p-4 shadow">
+
+  <h1 class="mb-6 text-center text-2xl font-bold">
+    Granja Pico
+  </h1>
+
+  <form id="formulario" class="space-y-4">
+
+    <!-- Fecha -->
+    <div>
+      <label class="mb-1 block text-sm font-medium">
+        Fecha
+      </label>
+
+      <input
+        type="date"
+        name="fecha"
+        class="w-full rounded-lg border border-gray-300 p-3"
+      />
+    </div>
+
+    <!-- Local -->
+    <div>
+      <label class="mb-1 block text-sm font-medium">
+        Local
+      </label>
+
+      <select
+        name="local"
+        class="w-full rounded-lg border border-gray-300 p-3"
+      >
+        <option value="">Seleccione...</option>
+
+        {locales.map((local) => (
+          <option value={local.id}>
+            {local.nombre}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    <!-- Estado -->
+    <div>
+      <label class="mb-1 block text-sm font-medium">
+        Estado
+      </label>
+
+      <select
+        name="estado"
+		id="estado"
+        class="w-full rounded-lg border border-gray-300 p-3"
+      >
+        <option value="">Seleccione...</option>
+
+        {estados.map((estado) => (
+          <option value={estado.id}>
+            {estado.nombre}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    <!-- Categoria -->
+    <div>
+      <label class="mb-1 block text-sm font-medium">
+        Categoría
+      </label>
+
+      <select
+        name="categoria"
+        id="categoria"
+        class="w-full rounded-lg border border-gray-300 p-3"
+      >
+        <option value="">Seleccione...</option>
+
+        {nombresCategorias.map((categoria) => (
+          <option value={categoria}>
+            {categoria}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    <!-- Productos -->
+    <div
+      id="productos"
+      class="space-y-3"
+    >
+    </div>
+
+    <button
+      class="w-full rounded-lg bg-blue-600 p-3 font-semibold text-white"
+    >
+      Guardar
+    </button>
+
+  </form>
+</div>
+
+<script define:vars={{ categorias }}>
+
+
+const categoria = document.getElementById("categoria");
+const estado = document.getElementById("estado");
+const contenedor = document.getElementById("productos");
+
+function renderProductos() {
+  const categoriaSeleccionada = categoria.value;
+  const estadoSeleccionado = Number(estado.value);
+
+  contenedor.innerHTML = "";
+
+  if (!categoriaSeleccionada || !estadoSeleccionado) return;
+
+  categorias[categoriaSeleccionada].forEach((producto) => {
+
+
+    // Render normal
+    contenedor.insertAdjacentHTML(
+      "beforeend",
+      `
+      <div class="flex items-center justify-between gap-3">
+        <label class="flex-1 font-semibold">
+          ${producto.nombre}
+        </label>
+
+        <input
+          type="number"
+          min="0"
+          step="1"
+          value="0"
+          data-id="${producto.id}"
+          class="w-28 rounded-lg border border-gray-300 p-2 text-right"
+        />
+      </div>
+      `
+    );
+  });
+}
+
+categoria.addEventListener("change", renderProductos);
+estado.addEventListener("change", renderProductos);
+
+const formulario = document.getElementById('formulario')
+
+formulario.addEventListener('submit',async (e) => {
+  e.preventDefault()
+
+  const formData = new FormData(formulario);
+
+  const datos = {
+
+    fecha : formData.get('fecha'), 
+    local_id : Number(formData.get('local')),
+    estado_id : Number(formData.get('estado')),
+    productos: []
+
+  }
+
+  if (!datos.fecha) {
+    alert("Seleccione una fecha");
+    return;
+  }
+
+  if (!datos.local_id) {
+    alert("Seleccione un local");
+    return;
+  }
+
+  if (!datos.estado_id){
+    alert("seleccione un estado")
+    return;
+  }
+
+
+  const inputs = contenedor.querySelectorAll("input[data-id]")
+
+
+  if (!inputs.length) {
+  alert("Seleccione una categoría con productos");
+  return;
+  }
+  
+  inputs.forEach((input) => {
+
+    const cantidad = Number(input.value);
+
+    if (cantidad > 0) {
+
+      datos.productos.push({
+        id: Number(input.dataset.id),
+        cantidad: cantidad
+      });
+
+    }
+
+  });
+
+  if (!datos.productos.length) {
+    alert("Ingrese una cantidad para al menos un producto");
+    return;
+  }
+
+  console.log('sdf',datos);
+
+  try {
+
+    const respuesta = await fetch("/api/stock", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(datos)
+    });
+
+    const resultado = await respuesta.json();
+
+    if (!respuesta.ok) {
+      alert(resultado.error || "Error al guardar");
+      return;
+    }
+
+    if (resultado.success) {
+      alert("Movimiento guardado correctamente");
+
+      formulario.reset();
+      contenedor.innerHTML = "";
+    }
+
+  } catch (error) {
+
+    console.error(error);
+    alert("Error de conexión con el servidor");
+
+  }
+
+
+})
+
+
+</script>

@@ -1,11 +1,49 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
 
+import Layout from '../layouts/Layout.astro';
+import Form from '../components/Form.astro';
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+
+
+export  const prerender = false
+
+const base = Astro.url.origin;
+
+const [productosRes, localesRes, estadosRes] = await Promise.all([
+  fetch(`${base}/api/productos`),
+  fetch(`${base}/api/local`),
+  fetch(`${base}/api/estados`),
+]);
+
+if (!productosRes.ok) {
+	throw new Error("error en prodcutos");
+}
+
+if (!localesRes.ok) {
+	throw new Error("error en locales");
+	
+}
+
+if (!estadosRes.ok) {
+	throw new Error("error en estados");
+}
+
+const [productos, locales, estados] = await Promise.all([
+  productosRes.json(),
+  localesRes.json(),
+  estadosRes.json(),
+]);
+
+
+const categorias = productos.reduce((acc:any, producto:any) => {
+  (acc[producto.categoria] ??= []).push(producto);
+  return acc;
+}, {});
+
+console.log(categorias)
 ---
 
 <Layout>
-	<Welcome />
+	<Form  locales ={locales} estados={estados} categorias= {categorias}>
 </Layout>
