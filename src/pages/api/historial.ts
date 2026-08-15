@@ -3,9 +3,6 @@ import { supabase } from "../../lib/supabase";
 
 export const prerender = false;
 
-
-
-
 export const GET: APIRoute = async ({ url }) => {
   const fecha = url.searchParams.get("fecha");
   const local = url.searchParams.get("local");
@@ -37,7 +34,8 @@ export const GET: APIRoute = async ({ url }) => {
       ),
       estados!inner(
         nombre
-      )
+      ),
+      create_at
     `)
     .eq("local_id", Number(local))
     .eq("productos.categoria", categoria)

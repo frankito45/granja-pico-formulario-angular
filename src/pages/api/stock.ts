@@ -169,6 +169,7 @@ if (!resumen[producto]) {
     produccion: 0,
     envio: 0,
     devolucion: 0,
+    consumo:0,
     final: 0,
     ventas: 0,
   };
