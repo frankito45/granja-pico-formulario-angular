@@ -95,6 +95,7 @@ const nombresCategorias = Object.keys(categorias);
     </div>
 
     <button
+    id="guardar"
       class="w-full rounded-lg bg-blue-600 p-3 font-semibold text-white"
     >
       Guardar
@@ -102,15 +103,135 @@ const nombresCategorias = Object.keys(categorias);
 
   </form>
 </div>
+<!-- Modal -->
+<div
+  id="modal"
+  class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4"
+>
+  <div class="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-xl">
+
+    <!-- Estado: guardando -->
+    <div id="modalGuardando">
+      <div
+        class="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600"
+      ></div>
+
+      <h2 class="text-lg font-bold">
+        Guardando...
+      </h2>
+
+      <p class="mt-2 text-sm text-gray-500">
+        Espere mientras se guarda el movimiento.
+      </p>
+    </div>
+
+    <!-- Estado: éxito -->
+    <div id="modalExito" class="hidden">
+      <div class="mb-4 text-4xl">
+        ✅
+      </div>
+
+      <h2 class="text-lg font-bold text-green-600">
+        Guardado correctamente
+      </h2>
+
+      <p class="mt-2 text-sm text-gray-500">
+        El movimiento fue guardado correctamente.
+      </p>
+
+      <button
+        id="cerrarModalExito"
+        type="button"
+        class="mt-5 w-full rounded-lg bg-green-600 p-3 font-semibold text-white"
+      >
+        Aceptar
+      </button>
+    </div>
+
+    <!-- Estado: error -->
+    <div id="modalError" class="hidden">
+      <div class="mb-4 text-4xl">
+        ❌
+      </div>
+
+      <h2 class="text-lg font-bold text-red-600">
+        Error al guardar
+      </h2>
+
+      <p id="mensajeError" class="mt-2 text-sm text-gray-500">
+      </p>
+
+      <button
+        id="cerrarModalError"
+        type="button"
+        class="mt-5 w-full rounded-lg bg-red-600 p-3 font-semibold text-white"
+      >
+        Cerrar
+      </button>
+    </div>
+
+  </div>
+</div>
 
 <script define:vars={{ categorias }}>
-
 
 const categoria = document.getElementById("categoria");
 const estado = document.getElementById("estado");
 const contenedor = document.getElementById("productos");
+const guardar = document.getElementById("guardar");
+const formulario = document.getElementById("formulario");
+
+// Modal
+const modal = document.getElementById("modal");
+const modalGuardando = document.getElementById("modalGuardando");
+const modalExito = document.getElementById("modalExito");
+const modalError = document.getElementById("modalError");
+const mensajeError = document.getElementById("mensajeError");
+
+const cerrarModalExito = document.getElementById("cerrarModalExito");
+const cerrarModalError = document.getElementById("cerrarModalError");
+
+
+function mostrarModalGuardando() {
+
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+
+  modalGuardando.classList.remove("hidden");
+  modalExito.classList.add("hidden");
+  modalError.classList.add("hidden");
+}
+
+
+function mostrarModalExito() {
+
+  modalGuardando.classList.add("hidden");
+  modalError.classList.add("hidden");
+
+  modalExito.classList.remove("hidden");
+}
+
+
+function mostrarModalError(error) {
+
+  modalGuardando.classList.add("hidden");
+  modalExito.classList.add("hidden");
+
+  mensajeError.textContent = error || "Ocurrió un error al guardar.";
+
+  modalError.classList.remove("hidden");
+}
+
+
+function cerrarModal() {
+
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+}
+
 
 function renderProductos() {
+
   const categoriaSeleccionada = categoria.value;
   const estadoSeleccionado = Number(estado.value);
 
@@ -120,12 +241,11 @@ function renderProductos() {
 
   categorias[categoriaSeleccionada].forEach((producto) => {
 
-
-    // Render normal
     contenedor.insertAdjacentHTML(
       "beforeend",
       `
       <div class="flex items-center justify-between gap-3">
+
         <label class="flex-1 font-semibold">
           ${producto.nombre}
         </label>
@@ -138,55 +258,80 @@ function renderProductos() {
           data-id="${producto.id}"
           class="w-28 rounded-lg border border-gray-300 p-2 text-right"
         />
+
       </div>
       `
     );
+
   });
 }
+
 
 categoria.addEventListener("change", renderProductos);
 estado.addEventListener("change", renderProductos);
 
-const formulario = document.getElementById('formulario')
 
-formulario.addEventListener('submit',async (e) => {
-  e.preventDefault()
+// Cerrar modales
+cerrarModalExito.addEventListener("click", cerrarModal);
+cerrarModalError.addEventListener("click", cerrarModal);
+
+
+// Submit
+formulario.addEventListener("submit", async (e) => {
+
+  e.preventDefault();
 
   const formData = new FormData(formulario);
 
   const datos = {
 
-    fecha : formData.get('fecha'), 
-    local_id : Number(formData.get('local')),
-    estado_id : Number(formData.get('estado')),
+    fecha: formData.get("fecha"),
+
+    local_id: Number(formData.get("local")),
+
+    estado_id: Number(formData.get("estado")),
+
     productos: []
 
-  }
+  };
 
+
+  // Validaciones
   if (!datos.fecha) {
+
     alert("Seleccione una fecha");
+
     return;
   }
+
 
   if (!datos.local_id) {
+
     alert("Seleccione un local");
-    return;
-  }
 
-  if (!datos.estado_id){
-    alert("seleccione un estado")
     return;
   }
 
 
-  const inputs = contenedor.querySelectorAll("input[data-id]")
+  if (!datos.estado_id) {
+
+    alert("Seleccione un estado");
+
+    return;
+  }
+
+
+  const inputs = contenedor.querySelectorAll("input[data-id]");
 
 
   if (!inputs.length) {
-  alert("Seleccione una categoría con productos");
-  return;
+
+    alert("Seleccione una categoría con productos");
+
+    return;
   }
-  
+
+
   inputs.forEach((input) => {
 
     const cantidad = Number(input.value);
@@ -194,52 +339,101 @@ formulario.addEventListener('submit',async (e) => {
     if (cantidad > 0) {
 
       datos.productos.push({
+
         id: Number(input.dataset.id),
+
         cantidad: cantidad
+
       });
 
     }
 
   });
 
+
   if (!datos.productos.length) {
+
     alert("Ingrese una cantidad para al menos un producto");
+
     return;
   }
+
+
+  // Mostrar modal inmediatamente
+  mostrarModalGuardando();
+
+  // Deshabilitar botón para evitar doble guardado
+  guardar.disabled = true;
+  guardar.classList.add("opacity-50", "cursor-not-allowed");
+
 
   try {
 
     const respuesta = await fetch("/api/stock", {
+
       method: "POST",
+
       headers: {
         "Content-Type": "application/json"
       },
+
       body: JSON.stringify(datos)
+
     });
+
 
     const resultado = await respuesta.json();
 
+
     if (!respuesta.ok) {
-      alert(resultado.error || "Error al guardar");
+
+      mostrarModalError(
+        resultado.error || "Error al guardar el movimiento."
+      );
+
       return;
     }
 
+
     if (resultado.success) {
-      alert("Movimiento guardado correctamente");
+
+      // Cambiar modal de "Guardando" a "Guardado correctamente"
+      mostrarModalExito();
 
       formulario.reset();
+
       contenedor.innerHTML = "";
+
+    } else {
+
+      mostrarModalError(
+        resultado.error || "No se pudo guardar el movimiento."
+      );
+
     }
+
 
   } catch (error) {
 
     console.error(error);
-    alert("Error de conexión con el servidor");
+
+    mostrarModalError(
+      "Error de conexión con el servidor."
+    );
+
+
+  } finally {
+
+    // Volver a habilitar el botón
+    guardar.disabled = false;
+
+    guardar.classList.remove(
+      "opacity-50",
+      "cursor-not-allowed"
+    );
 
   }
 
-
-})
-
+});
 
 </script>
