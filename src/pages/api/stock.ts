@@ -95,7 +95,7 @@ export const POST: APIRoute = async ({ request }) => {
 
 
 // src/pages/api/stock.ts
-
+import type { Registro } from "../../models/registro";
 
 export const GET: APIRoute = async ({ url }) => {
   const fecha = url.searchParams.get("fecha");
@@ -128,7 +128,7 @@ const hasta = `${fecha}T23:59:59-03:00`;
     .eq("local_id", Number(local))
     .eq("productos.categoria", categoria)
     .gte("fecha", desde)
-    .lte("fecha", hasta);
+    .lte("fecha", hasta) as { data: Registro[] | null, error: any };;
 
   if (error) {
     return Response.json(
@@ -152,6 +152,10 @@ const hasta = `${fecha}T23:59:59-03:00`;
 
   const resumen: Record<string, any> = {};
 
+  if (!data) {
+    throw new Error("error al traer la consulta");
+  }
+  
   for (const mov of data) {
     const producto = mov.productos.nombre;
     const producto_id = mov.productos.id;
