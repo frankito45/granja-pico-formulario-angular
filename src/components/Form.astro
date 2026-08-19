@@ -250,6 +250,7 @@ function renderProductos() {
         <input
           type="number"
           value="0"
+
           data-id="${producto.id}"
           class="w-28 rounded-lg border border-gray-300 p-2 text-right"
         />
@@ -329,9 +330,7 @@ formulario.addEventListener("submit", async (e) => {
 
   inputs.forEach((input) => {
 
-    const cantidad = Number(input.value);
-
-    if (cantidad > 0) {
+    const cantidad = float(input.value);
 
       datos.productos.push({
 
@@ -341,7 +340,7 @@ formulario.addEventListener("submit", async (e) => {
 
       });
 
-    }
+    
 
   });
 
